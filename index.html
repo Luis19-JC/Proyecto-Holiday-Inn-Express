@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HIE | Sistema de Control de Comedores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand-header">
+                <div class="logo-box">
+                    <img src="assets/img/logo.png" alt="Logo Holiday Inn Express" class="logo-img"
+                        onerror="this.src='https://ui-avatars.com/api/?name=HI&background=white&color=003876&bold=true';">
+                </div>
+                <div class="brand-titles">
+                    <span class="m-brand">Holiday Inn Express</span>
+                    <span class="s-brand">Centro Histórico</span>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <span class="nav-section-title">MÓDULOS</span>
+                <button class="nav-item active" id="btn-nav-comedor" onclick="irA('comedor')">
+                    Restaurante
+                </button>
+                <button class="nav-item" id="btn-nav-comedor-emp" onclick="irA('comedor-empleados')">
+                    Comedor Empleados
+                </button>
+                <button class="nav-item" id="btn-nav-empleados" onclick="irA('empleados')">
+                    Empleados
+                </button>
+                <button class="nav-item" id="btn-nav-reportes" onclick="irA('reportes')">
+                    Reporte Restaurante
+                </button>
+                <button class="nav-item" id="btn-nav-reporte-empleados" onclick="irA('reporte-empleados')">
+                    Reporte Empleados
+                </button>
+
+                <button class="nav-item" onclick="toggleFullScreen()" id="btn-fs"
+                    style="margin-top: 20px; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3);">
+                    ⛶ Pantalla Completa
+                </button>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div id="modulo-comedor">
+                <header class="top-header">
+                    <div class="header-titles">
+                        <h1>Control de Restaurante</h1>
+                        <p class="header-subtitle">
+                            Registro de cubiertos | <span id="fecha-actual"
+                                style="font-weight: 800; color: #003876;"></span>
+                        </p>
+                    </div>
+
+                    <button class="kpi-card" onclick="abrirModal()" title="Haga clic para ver el desglose detallado">
+                        <span class="kpi-label">TOTAL CONFIRMADO</span>
+                        <strong class="kpi-value" id="display-total">0</strong>
+                        <span class="kpi-action">Ver Desglose →</span>
+                    </button>
+                </header>
+
+                <nav id="categorias-tabs" class="category-dock-container">
+                    <div class="dock-wrapper">
+                        <button class="tab-btn active" onclick="renderCards('huésped')">Huésped</button>
+                        <button class="tab-btn" onclick="renderCards('ventas')">Ventas</button>
+                        <button class="tab-btn" onclick="renderCards('colaborador')">Colaborador</button>
+                        <button class="tab-btn" onclick="renderCards('cortesías')">Cortesías</button>
+                    </div>
+                </nav>
+
+                <section id="cards-container" class="cards-grid-system"></section>
+
+                <footer class="main-action-area">
+                    <button class="btn-confirm-main" onclick="confirmarYGuardar()">Confirmar Registro</button>
+                </footer>
+            </div>
+
+            <div id="modulo-reportes" style="display: none; padding: 20px;">
+                <div class="header-titles" style="margin-bottom: 20px;">
+                    <h1 style="color: #003876;">Reporte general de los días</h1>
+                    <p class="header-subtitle">Totales acumulados por fecha</p>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                    <button onclick="exportarExcel()"
+                        style="background:#1D6F42; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:bold;">
+                        📊 Exportar Excel
+                    </button>
+                    <button onclick="exportarPDF()"
+                        style="background:#E61610; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:bold;">
+                        📄 Exportar PDF
+                    </button>
+                </div>
+
+                <div
+                    style="margin-top: var(--space-lg); margin-bottom: var(--space-xl); display: flex; justify-content: center; width: 100%;">
+                    <div class="search-wrapper-premium">
+                        <span class="search-icon-premium">🔍</span>
+
+                        <input type="text" id="buscador-empleados" class="search-input-premium"
+                            placeholder="Buscar colaborador">
+
+                        <kbd class="search-badge-premium">Filtrar</kbd>
+                    </div>
+                </div>
+
+                <div class="table-container-premium"
+                    style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow-x: auto;">
+                    <table
+                        style="width: 100%; border-collapse: collapse; min-width: 1100px; font-family: 'Inter', sans-serif;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #edeff2;">
+                                <th style="padding: 12px; color: #003876; text-align: left;">FECHA</th>
+                                <th>Huésped</th>
+                                <th>H. Extra</th>
+                                <th>DP Adulto</th>
+                                <th>DP Niño</th>
+                                <th>Ama Llaves</th>
+                                <th>Mant.</th>
+                                <th>A y B</th>
+                                <th>Recepción</th>
+                                <th>Admin</th>
+                                <th>Ventas</th>
+                                <th>RH</th>
+                                <th>Seguridad</th>
+                                <th>C. Comité</th>
+                                <th>C. Extra</th>
+                                <th style="background: #003876; color: white;">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-reportes-body" style="text-align: center; color: #333;">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="modulo-empleados" style="display: none; padding: 20px;">
+
+                <header class="top-header">
+                    <div class="header-titles">
+                        <h1>Gestión de Personal</h1>
+                        <p class="header-subtitle">Directorio y Control de QRs únicos</p>
+                    </div>
+
+                    <button class="kpi-card" onclick="abrirModalEmpleado()">
+                        <span class="kpi-label">AÑADIR NUEVO COLABORADOR</span>
+                        <strong class="kpi-value">+</strong>
+                        <span class="kpi-action">Abrir Formulario →</span>
+                    </button>
+                </header>
+
+                <div
+                    style="margin-top: var(--space-lg); margin-bottom: var(--space-xl); display: flex; justify-content: center; width: 100%;">
+                    <div class="search-wrapper-premium">
+                        <span class="search-icon-premium">🔍</span>
+
+                        <input type="text" id="buscador-empleados" class="search-input-premium"
+                            placeholder="Buscar colaborador">
+
+                        <kbd class="search-badge-premium">Filtrar</kbd>
+                    </div>
+                </div>
+
+                <div class="table-container-premium" style="margin-top: 20px; overflow-x: auto;">
+                    <div class="table-container-premium" style="margin-top: 20px; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 900px;" id="tabla-empleados">
+                            <thead>
+                                <tr style="background: #f8f9fa; border-bottom: 2px solid #edeff2;">
+                                    <th style="padding: 12px; color: #003876; text-align: left;">NOMBRE COMPLETO
+                                    </th>
+                                    <th style="text-align: center;">ID COLABORADOR</th>
+                                    <th style="text-align: center;">DEPARTAMENTO</th>
+                                    <th style="text-align: center;">PUESTO</th>
+                                    <th style="text-align: center;">QR</th>
+                                    <th style="text-align: center;">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-empleados-body" style="text-align: center; color: #333;">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div id="modulo-comedor-empleados" class="scanner-module" style="display: none;">
+                <header class="header-titles">
+                    <h1>Escáner de Colaboradores</h1>
+                    <p class="header-subtitle">Acceso al Comedor para los Colaboradores</p>
+                </header>
+
+                <div class="scanner-card">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-overlay-hint">
+                        <span>📷</span> Posiciona el código QR frente a la cámara
+                    </div>
+                </div>
+            </div>
+
+            <div id="modulo-reporte-empleados" style="display: none; padding: 20px;">
+
+                <div class="header-titles" style="margin-bottom: 20px;">
+                    <h1 style="color: #003876;">Reporte de Asistencia Colaboradores</h1>
+                    <p class="header-subtitle">Registros validados por escaneo QR</p>
+                </div>
+
+                <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                    <button onclick="exportarExcelEmpleados()"
+                        style="background:#1D6F42; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:bold;">
+                        📊 Exportar Excel
+                    </button>
+
+                    <button onclick="exportarPDFEmpleados()"
+                        style="background:#E61610; color:white; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; font-weight:bold;">
+                        📄 Exportar PDF
+                    </button>
+                </div>
+
+                <div
+                    style="margin-top: var(--space-lg); margin-bottom: var(--space-xl); display: flex; justify-content: center; width: 100%;">
+                    <div class="search-wrapper-premium">
+                        <span class="search-icon-premium">🔍</span>
+
+                        <input type="text" id="buscador-empleados" class="search-input-premium"
+                            placeholder="Buscar colaborador">
+
+                        <kbd class="search-badge-premium">Filtrar</kbd>
+                    </div>
+                </div>
+
+                <div class="table-container-premium"
+                    style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow-x: auto;">
+
+                    <table id="tabla-reporte-empleados"
+                        style="width: 100%; border-collapse: collapse; min-width: 900px; font-family: 'Inter', sans-serif;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #edeff2;">
+                                <th style="padding: 12px; color: #003876; text-align: left;">FECHA</th>
+                                <th>Ama Llaves</th>
+                                <th>Mantenimiento</th>
+                                <th>Alimentos y Bebidas</th>
+                                <th>Recepción</th>
+                                <th>Administración</th>
+                                <th>Ventas</th>
+                                <th>Recursos humanos</th>
+                                <th>Seguridad</th>
+                                <th style="background: #003876; color: white; text-align: center;">TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-reporte-empleados-body" style="text-align: center; color: #333;">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+
+
+<div id="modal-resumen" class="modal-overlay">
+    <div class="modal-window">
+        <div class="modal-header">
+            <h2>Desglose del Día</h2>
+            <button class="btn-close-modal" onclick="cerrarModal()">✕</button>
+        </div>
+        <div class="modal-body" id="detalle-resumen">
+        </div>
+        <div class="modal-footer">
+            Holiday Inn Express Centro Histórico
+        </div>
+    </div>
+</div>
+
+<div id="modal-teclado" class="modal-overlay">
+    <div class="modal-window keyboard-window">
+        <div class="modal-header">
+            <h2 id="teclado-titulo">Cantidad Manual</h2>
+            <button class="btn-close-modal" onclick="cerrarTeclado()">✕</button>
+        </div>
+        <div class="keyboard-body">
+            <div class="keyboard-display" id="keyboard-screen">0</div>
+            <div class="keyboard-grid">
+                <button onclick="tecladoAdd(1)">1</button>
+                <button onclick="tecladoAdd(2)">2</button>
+                <button onclick="tecladoAdd(3)">3</button>
+                <button onclick="tecladoAdd(4)">4</button>
+                <button onclick="tecladoAdd(5)">5</button>
+                <button onclick="tecladoAdd(6)">6</button>
+                <button onclick="tecladoAdd(7)">7</button>
+                <button onclick="tecladoAdd(8)">8</button>
+                <button onclick="tecladoAdd(9)">9</button>
+                <button class="btn-clear" onclick="tecladoClear()">C</button>
+                <button onclick="tecladoAdd(0)">0</button>
+                <button class="btn-backspace" onclick="tecladoDelete()">⌫</button>
+            </div>
+            <button class="btn-confirm-keyboard" onclick="confirmarTeclado()">ACEPTAR</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-empleado" class="modal-overlay" style="display:none;">
+    <div class="modal-window keyboard-window" style="max-width: 550px;">
+
+        <div class="modal-header">
+            <h2 id="titulo-modal-empleado">Registrar Nuevo Colaborador</h2>
+            <button class="btn-close-modal" onclick="cerrarModalEmpleado()">✕</button>
+        </div>
+
+        <div class="modal-body" style="max-height: 75vh;">
+            <form id="form-empleado">
+                <input type="hidden" id="edit-id-empleado">
+
+                <div class="form-group-premium">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="emp-nombre" required placeholder="Nombres y apellidos">
+                </div>
+
+                <div class="form-group-premium">
+                    <label>ID Colaborador</label>
+                    <input type="text" id="emp-idcolab" required placeholder="Número de nómina">
+                </div>
+
+                <div class="form-group-premium">
+                    <label>Departamento</label>
+                    <div id="contenedor-deptos" class="grid-deptos-premium">
+                    </div>
+                    <input type="hidden" id="emp-depto-id" required>
+                </div>
+
+                <div class="form-group-premium">
+                    <label>Puesto</label>
+                    <input type="text" id="emp-puesto" required placeholder="Ej. Recepcionista">
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" onclick="cerrarModalEmpleado()" class="btn-cancel-premium">Cancelar</button>
+            <button type="submit" form="form-empleado" class="btn-confirm-premium">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-imprimir" class="modal-overlay" style="display:none;">
+    <div class="modal-window" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2>Código QR Único</h2>
+            <button class="btn-close-modal"
+                onclick="document.getElementById('modal-imprimir').style.display='none'">✕</button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">Este código es único y
+                servirá para su control de acceso al comedor.</p>
+            <div id="contenedor-qr-grafico"></div>
+        </div>
+        <div class="modal-footer" style="padding: 15px;">
+            <button onclick="window.print()" class="btn-confirm-premium" style="width: 100%;">🖨️ Imprimir
+                QR</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="html5-qrcode.min.js"></script>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+
+</html>

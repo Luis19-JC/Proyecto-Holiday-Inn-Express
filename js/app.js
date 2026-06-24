@@ -382,58 +382,6 @@ events.forEach(eventType => {
     });
 });
 
-
-// =========================== FUNCIÓN PARA VALIDAR HORARIO DE SERVICIO ===============================
-function verificarHorarioServicio() {
-    const ahora = new Date();
-    const diaSemana = ahora.getDay(); // 0 es Domingo, 1 al 6 es Lunes-Sábado
-    const horaActual = ahora.getHours();
-    const minutoActual = ahora.getMinutes();
-
-    // Se convierte la hora actual a minutos totales para comparar fácil
-    const tiempoActualEnMinutos = (horaActual * 60) + minutoActual;
-
-    let inicio, fin;
-
-    if (diaSemana === 0) {
-        // DOMINGO: 6:30 AM a 11:30 AM
-        inicio = (6 * 60) + 30;
-        fin = (11 * 60) + 30;
-    } else {
-        // LUNES A SÁBADO: 6:00 AM a 11:00 AM
-        inicio = 6 * 60;
-        fin = 11 * 60;
-    }
-
-    const btnConfirmar = document.querySelector('.btn-confirm-main');
-
-    if (tiempoActualEnMinutos >= inicio && tiempoActualEnMinutos < fin) {
-        // HORARIO PERMITIDO
-        btnConfirmar.disabled = false;
-        btnConfirmar.style.opacity = "1";
-        btnConfirmar.style.cursor = "pointer";
-        btnConfirmar.style.backgroundColor = "var(--h-blue)";
-        btnConfirmar.innerText = "Confirmar Registro";
-    } else {
-        // FUERA DE HORARIO
-        btnConfirmar.disabled = true;
-        btnConfirmar.style.opacity = "0.5";
-        btnConfirmar.style.cursor = "not-allowed";
-        btnConfirmar.style.backgroundColor = "#64748B";
-        btnConfirmar.innerText = "Cerrado (Fuera de Horario)";
-    }
-}
-//=====================================================================================================
-
-// Ejecutar la validación cada minuto para que el botón se bloquee solo si pasa la hora
-setInterval(verificarHorarioServicio, 60000);
-
-// También ejecutarla cuando cargue la página
-document.addEventListener('DOMContentLoaded', () => {
-    verificarHorarioServicio();
-});
-//=====================================================================================================
-
 // ========================== FUNCIÓN PARA MOSTRAR LA FECHA EN EL ENCABEZADO ==========================
 function mostrarFechaFormateada() {
     const fecha = new Date();

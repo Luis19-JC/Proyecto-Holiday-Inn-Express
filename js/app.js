@@ -634,10 +634,10 @@ function exportarExcel() {
             <td colspan="${totalColumnas}" style="text-align:center; font-family:Arial; font-size:13pt; font-style:italic;">Holiday Inn Express Merida Centro Historico</td>
         </tr>
         <tr><td></td><td></td><td></td>
-            <td colspan="${totalColumnas}" style="text-align:center; font-family:Arial; font-size:18pt; font-weight:bold;">Reporte de Control de Comedor</td>
+            <td colspan="${totalColumnas}" style="text-align:center; font-family:Arial; font-size:18pt; font-weight:bold;">Reporte de Control del Restaurante</td>
         </tr>
         <tr><td></td><td></td><td></td>
-            <td colspan="${totalColumnas}" style="text-align:center; font-family:Arial; font-size:11pt; font-weight:bold;">REGISTRO COMPLETO DE ASISTENCIA Y COSTOS</td>
+            <td colspan="${totalColumnas}" style="text-align:center; font-family:Arial; font-size:11pt; font-weight:bold;">REGISTRO COMPLETO</td>
         </tr>
         <tr><td></td><td></td><td></td></tr>
     `;
@@ -749,8 +749,8 @@ function exportarPDF() {
     contenedor.innerHTML = `
         <div style="text-align: center; font-family: Arial, sans-serif; margin-bottom: 20px;">
             <p style="font-style: italic; margin: 0;">Holiday Inn Express Merida Centro Historico</p>
-            <h1 style="margin: 5px 0; font-size: 18pt;">Reporte de Control de Comedor</h1>
-            <p style="font-weight: bold; margin: 0;">REGISTRO COMPLETO DE ASISTENCIAS</p>
+            <h1 style="margin: 5px 0; font-size: 18pt;">Reporte de Control del Restaurante</h1>
+            <p style="font-weight: bold; margin: 0;">REGISTRO COMPLETO</p>
         </div>
         <div style="border-top: 1px solid #000; margin-bottom: 20px;"></div>
     `;
@@ -758,7 +758,7 @@ function exportarPDF() {
 
     html2pdf().set({
         margin: 10,
-        filename: "Reporte_Control_Comedor.pdf",
+        filename: "Reporte_Restaurante.pdf",
         html2canvas: { scale: 3, width: 1400 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     }).from(contenedor).save();

@@ -556,19 +556,21 @@ async function cargarTablaReportes() {
             tr.innerHTML = `
                 <td style="padding: 15px; font-weight: 700; color: #003876;">${row.fecha_bonita}</td>
                 <td>${row.h_normal}</td>
-                <td>${row.h_extra}</td>
-                <td>${row.dp_normal}</td>
-                <td>${row.dp_plus}</td>
+                <td>${row.de_adulto}</td>
+                <td>${row.de_nino}</td>
+                <td>${row.dp_adulto}</td>
+                <td>${row.dp_nino}</td>
+                <td>${row.d_colaborador}</td>
                 <td>${row.ama_llaves}</td>
-                <td>${row.mant}</td>
+                <td>${row.mante}</td>
                 <td>${row.ayb}</td>
                 <td>${row.recep}</td>
-                <td>${row.admin}</td>
+                <td>${row.admini}</td>
                 <td>${row.ventas}</td>
                 <td>${row.rh}</td>
-                <td>${row.seg}</td>
-                <td>${row.cor_comite}</td>
-                <td>${row.cor_ventas}</td>
+                <td>${row.segu}</td>
+                <td>${row.cor_eje}</td>
+                <td>${row.cor_exter}</td>
                 <td style="padding: 15px; font-weight: 800; color: white; background: #003876;">${row.gran_total}</td>
             `;
             tablaBody.appendChild(tr);

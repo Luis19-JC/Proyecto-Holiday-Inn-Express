@@ -88,7 +88,6 @@ function cambiarVal(id, delta) {
 
 // ================ FUNCIÓN PARA EL FUNCIONAMIENTO CORRECTO DE CONFIRMACIÓN Y GUARDAR =================
 async function confirmarYGuardar() {
-    verificarHorarioServicio();
     const btn = document.querySelector('.btn-confirm-main');
     if (btn.disabled) return;
 
@@ -230,8 +229,6 @@ function cerrarModal() {
 
 // ------------------------------ CHECK-LIST DE SEGURIDAD Y PREPARACIÓN -------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // Verifica si el botón debe estar bloqueado o no por la hora
-    verificarHorarioServicio();
 
     // Renderiza los botones de Huésped
     renderCards('huésped');
